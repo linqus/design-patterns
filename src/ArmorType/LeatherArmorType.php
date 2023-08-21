@@ -2,7 +2,7 @@
 
 namespace App\ArmorType;
 
-class LeatherType implements ArmorType
+class LeatherArmorType implements ArmorType
 {
     public function getArmorReduction(int $damage): int
     {
