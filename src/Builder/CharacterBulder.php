@@ -9,6 +9,7 @@ use App\ArmorType\ShieldType;
 use App\AttackType\AttackType;
 use App\AttackType\BowType;
 use App\AttackType\FireBoltType;
+use App\AttackType\MultiAttackType;
 use App\AttackType\TwoHandedSwordType;
 use App\Character\Character;
 
@@ -17,7 +18,7 @@ class CharacterBuilder
 
     private int $maxHealth;
     private int $baseDamage;
-    private string $attackType;
+    private array $attackTypes;
     private string $armorType;
 
     public function setMaxHealth(int $maxHealth): self {
@@ -31,8 +32,8 @@ class CharacterBuilder
 
     }
 
-    public function setAttackType(string $attackType): self {
-        $this->attackType = $attackType;
+    public function setAttackType(string ...$attackTypes): self {
+        $this->attackTypes = $attackTypes;
         return $this;
     }
 
@@ -56,12 +57,23 @@ class CharacterBuilder
 
     private function createAttackType(): AttackType
     {
-        return match ($this->attackType) {
-            'bow' => new BowType(),
-            'fire_bolt' => new FireBoltType(),
-            'sword' => new TwoHandedSwordType(),
-            default => throw new \RuntimeException('Invalid attack type given')
+        $multiAttack = [];
+
+        foreach ($this->attackTypes as $attack) {
+            $multiAttack[] = match ($attack) {
+                'bow' => new BowType(),
+                'fire_bolt' => new FireBoltType(),
+                'sword' => new TwoHandedSwordType(),
+                default => throw new \RuntimeException('Invalid attack type given')
+            };    
         };
+
+        if (count($multiAttack) === 1) {
+            return $multiAttack[0];
+        } else {
+            return new MultiAttackType($multiAttack);
+        }
+        
     }
 
     private function createArmorType(): ArmorType

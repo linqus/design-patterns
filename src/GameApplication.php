@@ -9,6 +9,7 @@ use App\AttackType\BowType;
 use App\AttackType\FireBoltType;
 use App\AttackType\MultiAttackType;
 use App\AttackType\TwoHandedSwordType;
+use App\Builder\CharacterBuilder;
 use App\Character\Character;
 
 class GameApplication
@@ -45,10 +46,30 @@ class GameApplication
     public function createCharacter(string $character): Character
     {
         return match (strtolower($character)) {
-            'fighter' => new Character(90, 12, new ShieldType(), new TwoHandedSwordType()),
-            'archer' => new Character(80, 10, new LeatherArmorType(), new BowType()),
-            'mage' => new Character(70, 8, new IceBlockType(), new FireBoltType()),
-            'mag_archer' => new Character(75, 9, new IceBlockType(), new MultiAttackType( [new FireBoltType(), new BowType()] )),
+            'fighter' => $this->createCharacterBuilder()
+                ->setMaxHealth(90)
+                ->setBaseDamage(12)
+                ->setArmorType('shield')
+                ->setAttackType('sword')
+                ->buildCharacter(),
+            'archer' => $this->createCharacterBuilder()
+                ->setMaxHealth(80)
+                ->setBaseDamage(10)
+                ->setAttackType('bow')
+                ->setArmorType('leather_armor')
+                ->buildCharacter(),
+            'mage' => $this->createCharacterBuilder()
+                ->setMaxHealth(70)
+                ->setBaseDamage(8)
+                ->setAttackType('fire_bolt')
+                ->setArmorType('ice_block')
+                ->buildCharacter(),
+            'mage_archer' => $this->createCharacterBuilder()
+                ->setMaxHealth(75)
+                ->setBaseDamage(9)
+                ->setAttackType('fire_bolt', 'bow') // TODO re-add bow!
+                ->setArmorType('shield')
+                ->buildCharacter(),
             default => throw new \RuntimeException('Undefined Character'),
         };
     }
@@ -74,5 +95,10 @@ class GameApplication
     private function didPlayerDie(Character $player): bool
     {
         return $player->getCurrentHealth() <= 0;
+    }
+
+    private function createCharacterBuilder(): CharacterBuilder
+    {
+        return new CharacterBuilder();
     }
 }
