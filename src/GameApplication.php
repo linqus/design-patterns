@@ -12,9 +12,15 @@ use App\AttackType\TwoHandedSwordType;
 use App\Builder\CharacterBuilder;
 use App\Builder\CharacterBuilderFactory;
 use App\Character\Character;
+use App\GameObserverInterface\GameObserverInterface;
 
 class GameApplication
 {
+    /**
+     * @var GameObserverInterface[]
+     */
+    private array $gameObservers = [];
+
 
     public function __construct(private CharacterBuilderFactory $characterBuilderFactory)
     {
@@ -91,10 +97,28 @@ class GameApplication
         ];
     }
 
+    public function subscribe(GameObserverInterface $observer): void
+    {
+        if (!in_array($observer, $this->gameObservers)) {
+            $this->gameObservers[] = $observer;
+        }
+    }
+
+    public function unsubscribe(GameObserverInterface $observer): void
+    {
+        $key = array_search($observer, $this->gameObservers);
+
+        if ($key !== false) {
+            unset($this->gameObservers[$key]);
+        }
+    }
+
     private function finishFightResult(FightResult $fightResult, Character $winner, Character $loser): FightResult
     {
         $fightResult->setWinner($winner);
         $fightResult->setLoser($loser);
+
+        $this->notify($fightResult);
 
         return $fightResult;
     }
@@ -107,5 +131,12 @@ class GameApplication
     private function createCharacterBuilder(): CharacterBuilder
     {
         return $this->characterBuilderFactory->createBuilder();
+    }
+
+    private function notify(FightResult $result)
+    {
+        foreach ($this->gameObservers as $observer) {
+            $observer->onFigthFinished($result);
+        }
     }
 }
