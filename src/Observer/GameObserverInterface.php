@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GameObserverInterface;
+namespace App\Observer;
 
 use App\FightResult;
 

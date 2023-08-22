@@ -12,7 +12,7 @@ use App\AttackType\TwoHandedSwordType;
 use App\Builder\CharacterBuilder;
 use App\Builder\CharacterBuilderFactory;
 use App\Character\Character;
-use App\GameObserverInterface\GameObserverInterface;
+use App\Observer\GameObserverInterface;
 
 class GameApplication
 {
