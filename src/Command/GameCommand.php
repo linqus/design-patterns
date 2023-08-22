@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Character\Character;
 use App\Event\FightStartingEvent;
+use App\Event\OutputFightStartingSubscriber;
 use App\FightResult;
 use App\GameApplication;
 use App\Observer\XpEarnedObserver;
@@ -32,9 +33,7 @@ class GameCommand extends Command
 
         $io = new SymfonyStyle($input, $output);
 
-        $this->eventDispatcher->addListener(FightStartingEvent::class, function(FightStartingEvent $fight) use ($io) {
-            $io->note('Fight between ' . $fight->player->getNickname() . ' and ' . $fight->ai->getNickname() . ' is starting...');
-        });
+        //$this->eventDispatcher->addSubscriber(new OutputFightStartingSubscriber());
 
         $io->text('Welcome to the game where warriors fight against each other for honor and glory... and 🍕!');
 
