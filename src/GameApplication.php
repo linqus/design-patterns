@@ -12,7 +12,9 @@ use App\AttackType\TwoHandedSwordType;
 use App\Builder\CharacterBuilder;
 use App\Builder\CharacterBuilderFactory;
 use App\Character\Character;
+use App\Event\FightStartingEvent;
 use App\Observer\GameObserverInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class GameApplication
 {
@@ -22,13 +24,19 @@ class GameApplication
     private array $gameObservers = [];
 
 
-    public function __construct(private CharacterBuilderFactory $characterBuilderFactory)
+    public function __construct(
+        private CharacterBuilderFactory $characterBuilderFactory,
+        private EventDispatcherInterface $eventDispatcher,
+    )
     {
         
     }
 
     public function play(Character $player, Character $ai): FightResult
     {
+
+        $this->eventDispatcher->dispatch(new FightStartingEvent());
+
         $player->rest();
 
         $fightResult = new FightResult();
