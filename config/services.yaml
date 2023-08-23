@@ -27,8 +27,8 @@ services:
     #    calls:
     #        - subscribe: ['@App\Observer\XpEarnedObserver']
 
-    App\Service\XpCalculatorInterface: '@App\Service\XpCalculatorVerbal'
+    App\Service\XpCalculatorInterface: '@App\Service\XpCalculator'
 
-    App\Service\XpCalculatorVerbal:
-        arguments:
-            $innerCalculator: '@App\Service\XpCalculator'
+    #App\Service\XpCalculatorVerbal:
+    #    arguments:
+    #        $innerCalculator: '@App\Service\XpCalculator'

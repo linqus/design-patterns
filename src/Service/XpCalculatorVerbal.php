@@ -6,7 +6,9 @@ use App\Character\Character;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 
+#[AsDecorator(XpCalculatorInterface::class)]
 class XpCalculatorVerbal implements XpCalculatorInterface
 {
 
