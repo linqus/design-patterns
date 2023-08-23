@@ -30,9 +30,7 @@ class GameCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $xpCalculator = new XpCalculator();
-        $xpCalculator = new XpCalculatorVerbal($xpCalculator);
-        $this->game->subscribe(new XpEarnedObserver($xpCalculator));
+
 
         $io = new SymfonyStyle($input, $output);
 

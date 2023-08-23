@@ -26,3 +26,9 @@ services:
     #App\GameApplication:
     #    calls:
     #        - subscribe: ['@App\Observer\XpEarnedObserver']
+
+    App\Service\XpCalculatorInterface: '@App\Service\XpCalculatorVerbal'
+
+    App\Service\XpCalculatorVerbal:
+        arguments:
+            $innerCalculator: '@App\Service\XpCalculator'
