@@ -9,6 +9,7 @@ use App\FightResult;
 use App\GameApplication;
 use App\Observer\XpEarnedObserver;
 use App\Service\XpCalculator;
+use App\Service\XpCalculatorVerbal;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,7 +30,9 @@ class GameCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-
+        $xpCalculator = new XpCalculator();
+        $xpCalculator = new XpCalculatorVerbal($xpCalculator);
+        $this->game->subscribe(new XpEarnedObserver($xpCalculator));
 
         $io = new SymfonyStyle($input, $output);
 
